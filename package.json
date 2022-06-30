@@ -9,6 +9,7 @@
     "test": "jest --passWithNoTests --no-cache --runInBand",
     "test:watch": "npm test -- --watch",
     "test:coverage": "npm test -- --coverage",
+    "test:staged": "npm test -- --findRelatedTests",
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix"
   },
@@ -24,6 +25,7 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.2.0",
+    "lint-staged": "^13.0.3",
     "ts-node": "^10.8.1",
     "typescript": "^4.7.4"
   },
