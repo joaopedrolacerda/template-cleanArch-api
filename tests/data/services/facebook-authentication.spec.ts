@@ -1,30 +1,35 @@
 import { FacebookAuthentication } from '@/domain/features'
 class FacebookAuthenticationService {
   constructor (
-    private readonly loadFacebookUserByTokenApi: LoadFacebookUserByTokenApi
+    private readonly loadFacebookUserByTokenApi: LoadFacebookUserApi
   ) {}
 
   async perform (params: FacebookAuthentication.Params): Promise<void> {
-    await this.loadFacebookUserByTokenApi.loadUserByToken(params.token)
+    await this.loadFacebookUserByTokenApi.loadUser(params)
   }
 }
 
-interface LoadFacebookUserByTokenApi {
-  loadUserByToken: (token: string) => Promise<void>
+interface LoadFacebookUserApi {
+  loadUser: (params: LoadFacebookUserApi.Params) => Promise<void>
 }
-class LoadFacebookUserByTokenApiSpy implements LoadFacebookUserByTokenApi {
+namespace LoadFacebookUserApi {
+  export type Params = {
+    token: string
+  }
+}
+class LoadFacebookUserApiSpy implements LoadFacebookUserApi {
   token?: string
-  async loadUserByToken (token: string): Promise<void> {
-    this.token = token
+  async loadUser (params: LoadFacebookUserApi.Params): Promise<void> {
+    this.token = params.token
   }
 }
 describe('FacebookAuthenticationService', () => {
-  it('', async () => {
-    const LoadFacebookUserByTokenApi = new LoadFacebookUserByTokenApiSpy()
-    const sut = new FacebookAuthenticationService(LoadFacebookUserByTokenApi)
+  it('should cal LoadFacebookUserApi', async () => {
+    const LoadFacebookUserApi = new LoadFacebookUserApiSpy()
+    const sut = new FacebookAuthenticationService(LoadFacebookUserApi)
 
     await sut.perform({ token: 'any_token' })
 
-    expect(LoadFacebookUserByTokenApi.token).toBe('any_token')
+    expect(LoadFacebookUserApi.token).toBe('any_token')
   })
 })
