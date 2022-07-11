@@ -12,7 +12,7 @@
     "test:staged": "npm test -- --findRelatedTests",
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
-    "prepare":"husky install"
+    "prepare": "husky install"
   },
   "keywords": [],
   "author": "",
@@ -27,6 +27,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.2.0",
     "husky": "^8.0.1",
+    "jest-mock-extended": "^2.0.6",
     "lint-staged": "^13.0.3",
     "ts-node": "^10.8.1",
     "typescript": "^4.7.4"
