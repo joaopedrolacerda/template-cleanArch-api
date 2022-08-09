@@ -1,5 +1,5 @@
 import { LoadFacebookUserApi } from '@/data/contracts/apis'
-import { CreateFacebookAccountRepository, LoadUserAccountRepository } from '@/data/contracts/respos'
+import { CreateFacebookAccountRepository, LoadUserAccountRepository, UpdateFacebookAccountRepository } from '@/data/contracts/respos'
 import { FacebookAuthenticationService } from '@/data/services'
 import { AuthenticationError } from '@/domain/errors'
 
@@ -7,7 +7,7 @@ import { mock, MockProxy } from 'jest-mock-extended'
 
 describe('FacebookAuthenticationService', () => {
   let facebookApi: MockProxy<LoadFacebookUserApi>
-  let userAccountRepo: MockProxy<LoadUserAccountRepository & CreateFacebookAccountRepository>
+  let userAccountRepo: MockProxy<LoadUserAccountRepository & CreateFacebookAccountRepository & UpdateFacebookAccountRepository>
   let sut: FacebookAuthenticationService
   const token = 'any_token'
   beforeEach(() => {
@@ -45,7 +45,7 @@ describe('FacebookAuthenticationService', () => {
     expect(userAccountRepo.load).toHaveBeenCalledWith({ email: 'any_fb_email' })
     expect(userAccountRepo.load).toBeCalledTimes(1)
   })
-  it('should call CreateUserAccounRepo when  loadFacebookUserApi returns undefined', async () => {
+  it('should call CreateFacebookAccounRepo when  loadFacebookUserApi returns undefined', async () => {
     userAccountRepo.load.mockResolvedValueOnce(undefined)
 
     await sut.perform({ token })
@@ -57,5 +57,21 @@ describe('FacebookAuthenticationService', () => {
     }
     )
     expect(userAccountRepo.createFromFacebook).toBeCalledTimes(1)
+  })
+  it('should call UpdateFacebookAccounRepo when  loadFacebookUserApi returns data', async () => {
+    userAccountRepo.load.mockResolvedValueOnce({
+      id: 'any_id',
+      name: 'any_name'
+    })
+
+    await sut.perform({ token })
+
+    expect(userAccountRepo.updateWithFacebook).toHaveBeenCalledWith({
+      id: 'any_id',
+      name: 'any_name',
+      facebookId: 'any_fb_id'
+    }
+    )
+    expect(userAccountRepo.updateWithFacebook).toBeCalledTimes(1)
   })
 })
